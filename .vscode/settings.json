@@ -1,0 +1,6 @@
+{
+    "java.project.sourcePaths": [
+        "api/quarkus-getting-started/src/main/java/org/ucg/resource",
+        "api/quarkus-getting-started"
+    ]
+}
