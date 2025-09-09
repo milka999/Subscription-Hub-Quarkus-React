@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import org.ucg.model.enums.BillingCycle;
 import org.ucg.model.enums.SubscriptionStatus;
 
@@ -15,7 +14,6 @@ import java.time.LocalDate;
 @Table(name = "subscriptions")
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 public class Subscription extends BaseEntity {
 
@@ -35,8 +33,7 @@ public class Subscription extends BaseEntity {
     private SubscriptionStatus status; // e.g., "Active", "Cancelled", "On Hold"
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @ToString.Exclude
-    private SubscriptionProvider service;
+    private SubscriptionProvider provider;
 
     private LocalDate startedAt;
 

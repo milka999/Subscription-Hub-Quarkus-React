@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "subscription_services")
-public class SubscriptionProvider extends BaseEntity {
+public class  SubscriptionProvider extends BaseEntity {
 
     @Column(nullable = false)
     private String serviceName;

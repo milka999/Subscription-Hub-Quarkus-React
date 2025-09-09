@@ -21,5 +21,4 @@ public class RequestContext {
     public void setAuthenticatedUser(User user) {
         authenticatedUser.set(user);
     }
-
 }
