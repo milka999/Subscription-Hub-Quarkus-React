@@ -4,12 +4,15 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @MappedSuperclass
-@EntityListeners(BaseEntity.EntityListener.class)
 @FilterDef(name = "deletedFilter", parameters = @ParamDef(name = "includeDeleted", type = Boolean.class))
 @Filter(name = "deletedFilter", condition = "deleted_at IS NULL OR :includeDeleted = true")
 public class BaseEntity {
@@ -28,11 +31,6 @@ public class BaseEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
@@ -50,17 +48,8 @@ public class BaseEntity {
         return this.deletedAt != null;
     }
 
-    public static class EntityListener {
-        @PrePersist
-        public void prePersist(BaseEntity entity) {
-            if (entity.getCreatedAt() == null) {
-                entity.setCreatedAt(LocalDateTime.now());
-            }
-        }
-
-        @PreUpdate
-        public void preUpdate(BaseEntity entity) {
-            entity.setUpdatedAt(LocalDateTime.now());
-        }
+    @PrePersist
+    protected void onPrePersist() {
+        this.createdAt = LocalDateTime.now();
     }
 }

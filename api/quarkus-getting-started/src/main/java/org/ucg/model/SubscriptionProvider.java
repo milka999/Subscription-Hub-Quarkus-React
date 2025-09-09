@@ -3,15 +3,16 @@ package org.ucg.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.ucg.model.BaseEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
 @Entity
 @Table(name = "subscription_services")
-public class SubscriptionService extends BaseEntity {
+public class SubscriptionProvider extends BaseEntity {
 
     @Column(nullable = false)
     private String serviceName;

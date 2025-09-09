@@ -26,7 +26,7 @@ public class User extends BaseEntity{
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Subscription> subscriptions = new HashSet<>();
 
-    private BigDecimal subscribtionTotal;
+    private BigDecimal subscriptionTotal;
 
     private BigDecimal monthlyLimit;
 }

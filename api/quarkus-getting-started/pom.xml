@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.ucg</groupId>
-    <artifactId>quarkus-getting-started</artifactId>
+    <groupId>me.coreit.nlb</groupId>
+    <artifactId>subhub-api</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
@@ -12,10 +12,12 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.26.2</quarkus.platform.version>
+        <quarkus.platform.version>3.23.3</quarkus.platform.version>
         <skipITs>true</skipITs>
-        <surefire-plugin.version>3.5.3</surefire-plugin.version>
         <lombok.version>1.18.34</lombok.version>
+        <mapstruct.version>1.6.2</mapstruct.version>
+        <lombok.mapstruct.binding.version>0.2.0</lombok.mapstruct.binding.version>
+        <surefire-plugin.version>3.5.3</surefire-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -27,21 +29,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>${quarkus.platform.group-id}</groupId>
-                <artifactId>quarkus-camel-bom</artifactId>
-                <version>${quarkus.platform.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <dependencies>
-        <!-- Quarkus Dependencies -->
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-orm-panache</artifactId>
+            <artifactId>quarkus-rest</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -49,7 +43,19 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-rest</artifactId>
+            <artifactId>quarkus-flyway</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-rest-client-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-qute</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -57,11 +63,11 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-rest-client</artifactId>
+            <artifactId>quarkus-oidc</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-rest-client-jackson</artifactId>
+            <artifactId>quarkus-mailer</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -75,36 +81,56 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-arc</artifactId>
         </dependency>
-
-        <!-- Jakarta Validation API -->
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-validator</artifactId>
+            <artifactId>quarkus-keycloak-admin-rest-client</artifactId>
         </dependency>
-
-        <!-- Jakarta RESTful Web Services -->
         <dependency>
-            <groupId>jakarta.ws.rs</groupId>
-            <artifactId>jakarta.ws.rs-api</artifactId>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-oidc-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-cache</artifactId>
         </dependency>
 
-        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
 
-        <!-- Test Dependencies -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-scheduler</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.19.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.datafaker</groupId>
+            <artifactId>datafaker</artifactId>
+            <version>2.4.4</version>
+        </dependency>
+
+        <!-- For testing -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-smallrye-openapi</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.rest-assured</groupId>
-            <artifactId>rest-assured</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -131,21 +157,24 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${compiler-plugin.version}</version>
                 <configuration>
-                    <parameters>true</parameters>
                     <compilerArgs>
                         <arg>-parameters</arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
                         <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapstruct.version}</version>
+                        </path>
+                        <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
                         </path>
-                        <!-- Add Hibernate JPA Model Gen for better JPA support -->
                         <path>
-                            <groupId>org.hibernate.orm</groupId>
-                            <artifactId>hibernate-jpamodelgen</artifactId>
-                            <version>6.2.7.Final</version>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok-mapstruct-binding</artifactId>
+                            <version>${lombok.mapstruct.binding.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
